@@ -1,16 +1,3 @@
-# Set GNOME interface fonts
-setfont() {
-  local font="${1:?Usage: setfont <font-name> [size]}"
-  local size="${2:-11}"
-  local value="${font} ${size}"
-
-  gsettings set org.gnome.desktop.interface font-name "$value"
-  gsettings set org.gnome.desktop.interface document-font-name "$value"
-  gsettings set org.gnome.desktop.interface monospace-font-name "$value"
-
-  echo "Font set to: $value"
-}
-
 _conf() {
   _files -W "$XDG_CONFIG_HOME" -/
 }
@@ -29,3 +16,31 @@ proj() {
 
 compdef _conf conf
 compdef _proj proj
+
+dns-google() {
+  sudo nmcli connection modify "$(nmcli -g NAME connection show --active | head -n1)" \
+    ipv4.ignore-auto-dns yes \
+    ipv6.ignore-auto-dns yes \
+    ipv4.dns "8.8.8.8 8.8.4.4"
+
+  sudo nmcli connection down "$(nmcli -g NAME connection show --active | head -n1)"
+  sudo nmcli connection up "$(nmcli -g NAME connection show --active | head -n1)"
+}
+
+dns-cloudflare() {
+  sudo nmcli connection modify "$(nmcli -g NAME connection show --active | head -n1)" \
+    ipv4.ignore-auto-dns yes \
+    ipv4.dns "1.1.1.1"
+
+  sudo nmcli connection down "$(nmcli -g NAME connection show --active | head -n1)"
+  sudo nmcli connection up "$(nmcli -g NAME connection show --active | head -n1)"
+}
+
+dns-auto() {
+  sudo nmcli connection modify "$(nmcli -g NAME connection show --active | head -n1)" \
+    ipv4.ignore-auto-dns no \
+    ipv4.dns ""
+
+  sudo nmcli connection down "$(nmcli -g NAME connection show --active | head -n1)"
+  sudo nmcli connection up "$(nmcli -g NAME connection show --active | head -n1)"
+}

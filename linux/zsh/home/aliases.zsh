@@ -41,14 +41,6 @@ lf() { # zsh follow lf navigation
 alias zed='zeditor'
 alias vi='nvim'
 
-# Git
-alias glog='PAGER="less -F -X" git log'  # -F quit if one screen, -X no clear on exit
-alias gadog='PAGER="less -F -X" git log --all --decorate --oneline --graph'
-alias dotfiles='git --git-dir=$HOME/.dotfiles --work-tree=$HOME'
-
-# Video
-alias stream='mpv av://v4l2:/dev/video4 --fullscreen --demuxer-lavf-o=input_format=mjpeg,framerate=30 --profile=low-latency --untimed'
-
 # Misc
 alias load-fonts='fc-cache -fv'
 alias usage='codexbar usage'
@@ -56,11 +48,6 @@ alias usage='codexbar usage'
 alias evnup='sudo ipsec restart && sleep 1 && sudo ipsec up evnfc-dc && sudo resolvconf -u'
 alias evndn='sudo ipsec down evnfc-dc'
 
-alias turbo-d='echo 1 | sudo tee /sys/devices/system/cpu/intel_pstate/no_turbo'
-alias turbo-e='echo 0 | sudo tee /sys/devices/system/cpu/intel_pstate/no_turbo'
-
-alias codex-update='curl -fsSL https://chatgpt.com/codex/install.sh | sh'
-alias codex-remote='codex remote-control'
 
 alias plytest='sudo plymouthd --debug --debug-file=/tmp/plymouth-debug.log --tty=/dev/tty2; sudo plymouth --show-splash; sleep 3; sudo plymouth --quit'
 alias plylog="sudo grep \"Text '\" /tmp/plymouth-debug.log | tail -20"
