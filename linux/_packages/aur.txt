@@ -5,3 +5,6 @@ google-chrome
 # Tools
 fcitx5-lotus-bin
 anifetch-cli
+codexbar-cli
+linux-wifi-hotspot
+xdg-ninja

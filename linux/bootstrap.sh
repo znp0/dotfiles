@@ -10,6 +10,25 @@ DOTFILES_ROOT="$(realpath "$SCRIPT_DIR/..")"
 
 CONFIG_HOME="${XDG_CONFIG_HOME:-$HOME/.config}"
 
+INSTALL_LAPTOP_POWER=false
+for arg in "$@"; do
+    case "$arg" in
+        --laptop-power)
+            INSTALL_LAPTOP_POWER=true
+            ;;
+        -h|--help)
+            echo "Usage: $0 [--laptop-power]"
+            echo "  --laptop-power  Install and enable this laptop's CPU/GPU/display power settings."
+            exit 0
+            ;;
+        *)
+            echo "Unknown option: $arg" >&2
+            echo "Usage: $0 [--laptop-power]" >&2
+            exit 2
+            ;;
+    esac
+done
+
 # ==========================================
 # 2. PACKAGE INSTALLATION
 # ==========================================
@@ -125,7 +144,14 @@ while IFS='|' read -r src dst method; do
 done < "$SCRIPT_DIR/apps.txt"
 
 # ==========================================
-# 5. FINALIZATION
+# 5. LAPTOP POWER (OPTIONAL)
+# ==========================================
+if [[ "$INSTALL_LAPTOP_POWER" == true ]]; then
+    sudo bash "$SCRIPT_DIR/_scripts/laptop-power/install.sh"
+fi
+
+# ==========================================
+# 6. FINALIZATION
 # ==========================================
 # Change default shell to zsh
 chsh -s $(which zsh)

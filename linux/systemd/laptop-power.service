@@ -1,0 +1,22 @@
+[Unit]
+Description=CPU cap and AC/battery GPU and niri settings
+After=systemd-udev-trigger.service
+
+[Service]
+Type=simple
+Environment=DESKTOP_USER=zen
+Environment=CPU_CAP=60
+Environment=AC_ADAPTER=ADP1
+Environment=GPU=0000:03:00.0
+Environment=OUTPUT=eDP-1
+Environment=BATTERY_MODE=2560x1600@60
+ExecStart=/usr/bin/bash /usr/local/lib/laptop-power/laptop-power.sh
+Restart=on-failure
+RestartSec=5
+NoNewPrivileges=yes
+ProtectSystem=full
+ProtectHome=read-only
+UMask=0077
+
+[Install]
+WantedBy=multi-user.target

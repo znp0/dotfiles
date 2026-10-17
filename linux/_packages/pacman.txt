@@ -13,7 +13,6 @@ noctalia-greeter
 
 # Apps
 bitwarden
-brave-bin
 kitty
 nautilus
 neovim
@@ -24,14 +23,13 @@ opencode
 protonup-qt
 telegram-desktop
 vesktop
-vlc
 zed
+zen-browser-bin
 
 # Tools
 bat
 btop
 cliphist
-codesnap
 docker
 docker-compose
 fzf
@@ -43,8 +41,6 @@ slurp
 starship
 strongswan
 sushi
-tesseract
-tesseract-data-eng
 wl-clipboard
 zoxide
 zsh

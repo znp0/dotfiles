@@ -13,6 +13,58 @@ chmod +x linux/bootstrap.sh
 linux/bootstrap.sh
 ```
 
+To also install this laptop's CPU cap and automatic AC/battery GPU and display
+settings, run:
+
+```bash
+linux/bootstrap.sh --laptop-power
+```
+
+The power settings can also be installed separately without running the full bootstrap:
+
+```bash
+sudo bash linux/_scripts/laptop-power/install.sh
+```
+
+## Laptop power
+
+The service configuration lives in [`systemd/laptop-power.service`](./systemd/laptop-power.service).
+Edit its `Environment=` settings to change the desktop user, CPU cap, AC adapter,
+GPU address, display output, or battery display mode. The helper and installer
+live together in [`_scripts/laptop-power/`](./_scripts/laptop-power/).
+
+- CPU cap: `max_perf_pct=60` on AC and battery.
+- Battery: set `eDP-1` to `2560x1600@60`, then remove GPU `0000:03:00.0`.
+- AC: restore the GPU, set `power/control=auto`, then select the automatic display mode.
+
+The helper checks AC every two seconds and applies changes at boot, when AC changes,
+when a niri session starts, and after resume gaps longer than five seconds. Niri
+commands run as `zen`; sysfs writes run as root. Failed commands are retried.
+
+The installer copies the helper to `/usr/local/lib/laptop-power/` and the unit to
+`/etc/systemd/system/`, then enables and restarts the service. Rerun the installer
+after changing either file. These settings are specific to this laptop, so bootstrap
+installs them only with `--laptop-power`.
+
+```bash
+systemctl status laptop-power.service
+journalctl -u laptop-power.service -b
+sudo systemctl disable --now laptop-power.service
+```
+
+Disabling leaves the current settings in place. To restore the defaults:
+
+```bash
+echo 100 | sudo tee /sys/devices/system/cpu/intel_pstate/max_perf_pct
+echo 1 | sudo tee /sys/bus/pci/rescan
+echo auto | sudo tee /sys/bus/pci/devices/0000:03:00.0/power/control
+niri msg output eDP-1 mode auto
+```
+
+PCI removal detaches the GPU and may interrupt applications or displays using it.
+It does not guarantee physical power-off; see the
+[kernel documentation](https://docs.kernel.org/PCI/sysfs-pci.html).
+
 ## Set theme
 
 Run `set-theme.sh` to recreate the symbolic links for theme configs.
