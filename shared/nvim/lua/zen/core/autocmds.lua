@@ -6,12 +6,17 @@ if vim.env.KITTY_WINDOW_ID then
   autocmd("VimEnter", {
     callback = function()
       vim.fn.system({ "kitty", "@", "set-spacing", "padding=0" })
+      -- Set the `in_editor` variable in kitty
+      -- `MQ==` is base64 for `1`
+      vim.api.nvim_ui_send("\x1b]1337;SetUserVar=in_editor=MQ==\x07")
     end,
   })
 
   autocmd("VimLeavePre", {
     callback = function()
       vim.fn.system({ "kitty", "@", "set-spacing", "padding=default" })
+      -- Unset the `in_editor` variable in kitty
+      vim.api.nvim_ui_send("\x1b]1337;SetUserVar=in_editor\x07")
     end,
   })
 end
