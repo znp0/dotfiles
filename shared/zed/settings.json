@@ -9,7 +9,8 @@
 {
   "agent": {
     "button": false,
-    "notify_when_agent_waiting": "primary_screen",
+    "terminal_init_command": "",
+    "notify_when_agent_waiting": "all_screens",
     "default_model": {
       "enable_thinking": true,
       "provider": "openrouter",
@@ -27,15 +28,6 @@
       "show_go_models": false,
     },
   },
-  "context_servers": {
-    "figma-mcp-go": {
-      "enabled": false,
-      "remote": false,
-      "command": "npx",
-      "args": ["@vkhanhqui/figma-mcp-go@latest"],
-      "env": {},
-    },
-  },
 
   // Appearance
   "ui_font_family": "Dank Mono P",
@@ -49,8 +41,6 @@
   },
   "markdown_preview": {
     "font_size": 19,
-    "font_family": "Inter",
-    "code_font_family": "Dank Mono P",
   },
   "icon_theme": "Zed (Default)",
   "theme": "Everforest Void",

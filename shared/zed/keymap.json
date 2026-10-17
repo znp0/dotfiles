@@ -338,7 +338,6 @@
       "ctrl-n": null,
       "ctrl-p": null,
       "ctrl-g": null,
-      "ctrl-h": "multi_workspace::FocusWorkspaceSidebar",
     },
   },
   {
@@ -349,23 +348,6 @@
         "agents_sidebar::ToggleThreadSwitcher",
         { "select_last": true },
       ],
-    },
-  },
-  {
-    "context": "ThreadsSidebar || ThreadsSidebar > Editor",
-    "bindings": {
-      "ctrl-l": "multi_workspace::CloseWorkspaceSidebar",
-      "ctrl-t": "agent::NewTerminalThread",
-      "ctrl-w": "agent::ArchiveSelectedThread",
-    },
-  },
-  {
-    "context": "AgentPanel && AcpThread",
-    "bindings": {
-      "ctrl-g n": "agent::ToggleNewThreadMenu",
-      "ctrl-g m": "agent::ToggleModelSelector",
-      "ctrl-g t": "agent::ToggleThinkingEffortMenu",
-      "ctrl-g p": "agent::ToggleProfileSelector",
     },
   },
   {
@@ -406,4 +388,3 @@
     },
   },
 ]
-
