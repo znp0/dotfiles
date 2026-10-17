@@ -27,3 +27,16 @@ window-rule {
     blur true
   }
 }
+
+recent-windows {
+  highlight {
+    active-color "#bfc8ce"
+    padding 10
+    corner-radius 10
+  }
+
+  previews {
+    max-height 480
+    max-scale 0.5
+  }
+}

@@ -4,6 +4,6 @@
 // https://github.com/YaLTeR/niri/wiki/Configuration:-Outputs
 
 output "DP-1" {
-  mode "2560x1440@60" // Set resolution and refresh rate
+  mode "2560x1440@120" // Set resolution and refresh rate
   scale 1.5 // use 2 for HiDPI
 }

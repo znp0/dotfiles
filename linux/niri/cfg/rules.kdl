@@ -57,15 +57,6 @@ window-rule {
   open-focused false
 }
 
-window-rule {
-  match app-id="screen-translator"
-
-  open-floating true
-  open-focused false
-  open-on-output "DP-1"
-  default-floating-position x=10 y=100 relative-to="bottom-left"
-}
-
 // window-rule {
 //   match app-id="steam" title=r#"^notificationtoasts_\d+_desktop$"#
 //

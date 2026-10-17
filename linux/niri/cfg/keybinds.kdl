@@ -6,17 +6,26 @@ binds {
   // https://docs.noctalia.dev/getting-started/keybinds/
 
   // ─── Applications ───
-  Mod+Return  { spawn "kitty"; }
-  Mod+Space   { spawn-sh "noctalia msg panel-toggle launcher"; }
-  Mod+B       { spawn "zen-browser"; }
-  Mod+Shift+B { spawn "zen-browser" "--private-window"; }
-  Mod+E       { spawn "nautilus"; }
-  Mod+Period  { spawn-sh "noctalia msg panel-toggle liamwh/emoji-picker:desktop"; }
-  Mod+A       { spawn-sh "noctalia msg panel-toggle launcher '/tr vi '"; }
-  Mod+Shift+A { spawn-sh "wtype -M ctrl c -m ctrl; sleep 0.1; text=$(wl-paste); noctalia msg panel-toggle launcher \"/tr vi $text\""; }
-  Mod+V       { spawn-sh "noctalia msg panel-toggle clipboard"; }
-  Super+Grave { spawn-sh "translator translate"; }
-  Super+1     { spawn-sh "translator show-last"; }
+  Mod+Return        { spawn "kitty"; }
+  Mod+Space         { spawn-sh "noctalia msg panel-toggle launcher"; }
+  Mod+B             { spawn "zen-browser"; }
+  Mod+Shift+B       { spawn "zen-browser" "--private-window"; }
+  Mod+E             { spawn "nautilus"; }
+  Mod+Period        { spawn-sh "noctalia msg panel-toggle liamwh/emoji-picker:desktop"; }
+  Mod+A             { spawn-sh "noctalia msg panel-toggle launcher '/tr vi '"; }
+  Mod+Shift+A       { spawn-sh "wtype -M ctrl c -m ctrl; sleep 0.1; text=$(wl-paste); noctalia msg panel-toggle launcher \"/tr vi $text\""; }
+  Mod+V             { spawn-sh "noctalia msg panel-toggle clipboard"; }
+  Super+Grave       { spawn-sh "xpeek translate"; }
+  Super+Shift+Grave { spawn-sh "xpeek translate --no-persistent"; }
+  Super+1           { spawn-sh "xpeek translate --provider gemini"; }
+  Super+Shift+1     { spawn-sh "xpeek translate --no-persistent --provider gemini"; }
+  Super+9           { spawn-sh "xpeek show-history"; }
+  Super+0           { spawn-sh "xpeek select"; }
+  Super+Q           { spawn-sh "xpeek ocr"; }
+  Super+W           { spawn-sh "xpeek ocr --provider google"; }
+  Super+Shift+W     { spawn-sh "xpeek ocr --no-persistent --provider google"; }
+  Super+Tab         { spawn-sh "gamescopectl screenshot \"/home/zen/Projects/xpeek/samples-raw/$(date +%Y%m%d-%H%M%S-%N).png\""; }
+  Super+B           { spawn-sh "region=$(/home/zen/Projects/xpeek/.venv/bin/python -c \"from xpeek.region_state import load_region; print(load_region().as_geometry())\") && grim -g \"$region\" \"/home/zen/Projects/xpeek/samples-raw/$(date +%Y%m%d-%H%M%S-%N).png\""; }
 
   // ─── Media Controls ───
   XF86AudioRaiseVolume allow-when-locked=true { spawn-sh "noctalia msg volume-up 2"; }
@@ -25,8 +34,8 @@ binds {
   XF86AudioMicMute     allow-when-locked=true { spawn-sh "noctalia msg mic-mute"; }
   XF86AudioNext        allow-when-locked=true { spawn-sh "noctalia msg media next"; }
   XF86AudioPrev        allow-when-locked=true { spawn-sh "noctalia msg media previous"; }
-  XF86AudioPlay        allow-when-locked=true { spawn-sh "noctalia msg media play"; }
-  XF86AudioPause       allow-when-locked=true { spawn-sh "noctalia msg media pause"; }
+  XF86AudioPlay        allow-when-locked=true { spawn-sh "noctalia msg media toggle"; }
+  XF86AudioPause       allow-when-locked=true { spawn-sh "noctalia msg media toggle"; }
 
   Super+WheelScrollUp   allow-when-locked=true { spawn-sh "noctalia msg volume-up 2"; }
   Super+WheelScrollDown allow-when-locked=true { spawn-sh "noctalia msg volume-down 2"; }
@@ -98,8 +107,6 @@ binds {
   Mod+Ctrl+8 { move-column-to-workspace 8; }
   Mod+Ctrl+9 { move-column-to-workspace 9; }
 
-  Super+Tab { focus-workspace-previous; }
-
   // ─── Layout Controls ───
   Mod+F           { maximize-column; }
   Mod+R           { switch-preset-column-width; }
@@ -114,13 +121,14 @@ binds {
 
   // ─── Modes ───
   Mod+T      { toggle-window-floating; }
-  Mod+Ctrl+F { toggle-windowed-fullscreen; }
+  Ctrl+F11   { toggle-windowed-fullscreen; }
   F11        { fullscreen-window; }
 
   // ─── Screenshots ───
-  Mod+S       { screenshot-window; }
-  Mod+Shift+S { screenshot show-pointer=false; }
-  Mod+Ctrl+S  { screenshot-screen; }
+  Mod+S             { screenshot-window; }
+  Mod+Shift+S       { screenshot show-pointer=false; }
+  Mod+Ctrl+S        { screenshot-screen; }
+  Mod+Ctrl+Shift+S  { spawn-sh "noctalia msg screenshot-fullscreen all"; }
 
   // ─── Emergency Escape Key ───
   // Use this when a fullscreen app blocks your keybinds.
@@ -129,8 +137,8 @@ binds {
 
   // ─── Exit / Power ───
   // Ctrl+Alt+Delete   { quit; } // Also quits Niri
-  Mod+Shift+P   { power-off-monitors; } // Turn off screens (useful for OLED or privacy)
   Mod+O         repeat=false { toggle-overview; }
+  Super+P   { power-off-monitors; } // Turn off screens (useful for OLED or privacy)
   Super+L       { spawn-sh "noctalia msg session lock"; }
   Super+Shift+L { spawn-sh "noctalia msg session lock-and-suspend"; }
 }
