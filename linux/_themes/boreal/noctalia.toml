@@ -1,52 +1,71 @@
 [audio]
 enable_overdrive = true
+enable_sounds = false
 
 [backdrop]
 enabled = true
 tint_intensity = 0.0
 
-[bar.default]
-capsule_radius = 20
-center = [ "clock" ]
-end = [ "audio_visualizer", "tray", "battery", "network", "volume", "brightness", "notifications" ]
-margin_ends = 0
-padding = 20
-position = "left"
-radius = 0
-radius_bottom_right = 12
-radius_top_right = 12
-scale = 0.85
-shadow = false
-start = [ "overview", "workspaces", "group:g1" ]
-thickness = 30
-widget_spacing = 16
+[bar]
+order = [ "default" ]
 
-    [bar.default.dead_zone.actions]
-    left = "exec noctalia msg notification-clear-active"
-    middle = "volume-mute"
-    scroll_down = "volume-down 2"
-    scroll_up = "volume-up 2"
+    [bar.default]
+    capsule_radius = 20
+    center = [ "clock" ]
+    end = [ "audio_visualizer", "tray", "battery", "network", "volume", "brightness", "notifications" ]
+    margin_ends = 0
+    padding = 20
+    position = "left"
+    radius = 0
+    radius_bottom_right = 12
+    radius_top_right = 12
+    scale = 0.85000000521540642
+    shadow = false
+    start = [ "overview", "workspaces", "group:g1" ]
+    thickness = 30
+    widget_spacing = 16
 
-    [[bar.default.capsule_group]]
-    accordion = false
-    accordion_direction = "end"
-    enabled = true
-    fill = "surface"
-    id = "g1"
-    members = [ "cpu", "temp", "ram" ]
-    opacity = 1.0
-    padding = 6.0
-    radius = 20.0
-    widget_spacing = 8
+        [bar.default.dead_zone.actions]
+        left = "none"
+        middle = "volume-mute"
+        scroll_down = "volume-down 4"
+        scroll_up = "volume-up 4"
+
+        [[bar.default.capsule_group]]
+        accordion = false
+        accordion_direction = "end"
+        enabled = true
+        fill = "surface"
+        id = "g1"
+        members = [ "cpu", "temp", "ram" ]
+        opacity = 1.0
+        padding = 6.0
+        radius = 20.0
+        widget_spacing = 8
 
 [battery]
 warning_threshold = 25
 
     [battery.device."/org/freedesktop/UPower/devices/keyboard_dev_CA_A1_51_60_60_75"]
+    warning_threshold = 30
+
+    [battery.device."/org/freedesktop/UPower/devices/mouse_dev_C1_35_3B_D0_75_3D"]
+    warning_threshold = 20
+
+    [battery.device."/org/freedesktop/UPower/devices/mouse_dev_C1_35_3B_D0_75_3F"]
     warning_threshold = 25
 
+    [battery.device."/org/freedesktop/UPower/devices/mouse_dev_C1_35_3B_D0_75_51"]
+    warning_threshold = 25
+
+    [battery.device."/org/freedesktop/UPower/devices/mouse_dev_C1_35_3B_D0_75_6A"]
+    warning_threshold = 30
+
 [brightness]
+enable_ddcutil = true
 sync_all_monitors = false
+
+[calendar]
 
 [control_center]
 sidebar_section = "none"
@@ -77,27 +96,40 @@ radius = 0
 reserve_space = false
 shadow = false
 
+[hooks]
+battery_charging = "zsh -c \"battery-normal\""
+battery_discharging = "zsh -c \"battery-save\""
+
 [hot_corners]
-delay_ms = 500
-enabled = false
+delay_ms = 0
+enabled = true
 
     [hot_corners.top_left]
     action = "none"
     command = "niri msg action toggle-overview"
 
+    [hot_corners.top_right]
+    action = "command"
+    command = "noctalia msg notification-clear-active"
+
 [keybinds]
-down = [ "Down", "Ctrl+n" ]
+down = [ "Down", "Ctrl+n", "Ctrl+j" ]
 left = [ "Left", "Ctrl+h" ]
 right = [ "Right", "Ctrl+l" ]
-up = [ "Up", "Ctrl+p" ]
+up = [ "Up", "Ctrl+p", "Ctrl+k" ]
 
 [location]
 address = "Hanoi"
 
+[lockscreen]
+tint_intensity = 0.0
+transition = [ "disc" ]
+transition_duration = 500
+
 [lockscreen_widgets]
 enabled = true
 schema_version = 2
-widget_order = [ "lockscreen-login-box@DP-1", "lockscreen-login-box@eDP-1" ]
+widget_order = [ "lockscreen-login-box@HDMI-A-1", "lockscreen-login-box@DP-1", "lockscreen-login-box@eDP-1" ]
 
     [lockscreen_widgets.grid]
     cell_size = 16
@@ -107,10 +139,12 @@ widget_order = [ "lockscreen-login-box@DP-1", "lockscreen-login-box@eDP-1" ]
     [lockscreen_widgets.widget."lockscreen-login-box@DP-1"]
     box_height = 196.0
     box_width = 720.0
-    cx = 854.0
-    cy = 948.0
+    cx = 1138.8890380859375
+    cy = 1067.0
     enabled = false
     output = "DP-1"
+    placement_height = 1067.0
+    placement_width = 1707.0
     rotation = 0.0
     type = "login_box"
 
@@ -126,6 +160,35 @@ widget_order = [ "lockscreen-login-box@DP-1", "lockscreen-login-box@eDP-1" ]
         show_keyboard_layout = true
         show_login_button = true
         show_media = true
+        show_password_reveal = true
+        show_session_buttons = true
+        show_unlock_hint = true
+        show_weather = true
+
+    [lockscreen_widgets.widget."lockscreen-login-box@HDMI-A-1"]
+    box_height = 196.0
+    box_width = 810.0
+    cx = 1920.0
+    cy = 1978.0
+    output = "HDMI-A-1"
+    placement_height = 2160.0
+    placement_width = 3840.0
+    rotation = 0.0
+    type = "login_box"
+
+        [lockscreen_widgets.widget."lockscreen-login-box@HDMI-A-1".settings]
+        background_color = "surface_variant"
+        background_opacity = 0.88
+        background_radius = 12.0
+        center_password_text = false
+        input_opacity = 1.0
+        input_radius = 6.0
+        layout = "regular"
+        show_caps_lock = true
+        show_keyboard_layout = true
+        show_login_button = true
+        show_media = true
+        show_password_reveal = true
         show_session_buttons = true
         show_unlock_hint = true
         show_weather = true
@@ -136,6 +199,8 @@ widget_order = [ "lockscreen-login-box@DP-1", "lockscreen-login-box@eDP-1" ]
     cx = 854.0
     cy = 948.0
     output = "eDP-1"
+    placement_height = 1067.0
+    placement_width = 1707.0
     rotation = 0.0
     type = "login_box"
 
@@ -149,8 +214,9 @@ widget_order = [ "lockscreen-login-box@DP-1", "lockscreen-login-box@eDP-1" ]
         layout = "compact"
         show_caps_lock = true
         show_keyboard_layout = true
-        show_login_button = true
+        show_login_button = false
         show_media = false
+        show_password_reveal = false
         show_session_buttons = false
         show_unlock_hint = false
         show_weather = false
@@ -162,29 +228,29 @@ temperature_day = 4800
 temperature_night = 4700
 
 [notification]
-background_opacity = 1.0
+background_opacity = 0.99999997764825821
 border = false
 
 [osd]
-background_opacity = 1.0
+background_opacity = 0.99999997764825821
 border = false
 position = "top_right"
 
     [osd.kinds]
     keyboard_layout = false
 
-[plugin_settings."felipeartur/ai-usagebar"]
-panel_open_near_click = true
-refresh_minutes = 1
+[plugin_settings."liamwh/emoji-picker"]
+paste_command = "sleep 0.1; wtype -M ctrl v -m ctrl"
 
 [plugin_settings."noctalia/translator"]
 target_lang = "vi"
 
 [plugins]
-enabled = [ "noctalia/translator", "salemsayed/codexbar-meter" ]
+enabled = [ "noctalia/translator", "liamwh/emoji-picker" ]
 
 [shell]
 app_icon_color = "primary"
+avatar_path = "/home/zen/Downloads/f.png"
 button_borders = false
 corner_radius_scale = 1.0
 font_family = "Maple Mono"
@@ -192,13 +258,14 @@ polkit_agent = true
 screen_time_enabled = true
 
     [shell.animation]
-    speed = 2.0
+    speed = 2.0000000298023224
 
     [shell.greeter_sync]
     auto_sync = false
 
     [shell.launcher]
     categories = false
+    layout = "simple"
 
         [shell.launcher.providers.emoji]
         prefix = ""
@@ -216,6 +283,7 @@ screen_time_enabled = true
     size = 28
 
     [shell.screenshot]
+    annotate = true
     remember_last_region = true
     save_to_file = false
 
@@ -231,6 +299,9 @@ community_palette = "Vesper"
 custom_palette = "custom"
 source = "custom"
 wallpaper_scheme = "m3-content"
+
+    [theme.templates]
+    builtin_ids = [ "gtk3", "gtk4" ]
 
 [wallpaper]
 edge_smoothness = 0.0
@@ -250,7 +321,7 @@ transition_on_startup = true
     path = "/home/zen/Pictures/Wallpapers/alpine.jpg"
 
 [weather]
-enabled = false
+enabled = true
 
 [widget.Overview]
 glyph = "navigation-filled"
@@ -267,13 +338,6 @@ mirrored = false
     [widget.audio_visualizer.actions]
     left = "panel-toggle control-center media"
 
-[widget.bar]
-show_idle_on_horizontal = false
-type = "noctalia/timer:bar"
-
-[widget.bar_2]
-type = "salemsayed/codexbar-meter:bar"
-
 [widget.battery]
 show_label = false
 
@@ -286,8 +350,8 @@ show_label = false
 
 [widget.clock]
 format = "{:%H %M %u %d %m %y}"
-tooltip_format = "{:%H:%M %a, %b %m}"
-vertical_format = "{:%H %M%n%u%n%d %m %y}"
+tooltip_format = "{:%H:%M %a, %b %d}"
+vertical_format = "{:%H%n%M%n%u%n%d%n%m%n%y}"
 
 [widget.control-center]
 enabled = true
@@ -342,5 +406,6 @@ hide_when_empty = true
 inactive_pill_size = 1.2
 labels_only_when_occupied = true
 occupied_color = "outline"
-pill_scale = 0.85
+pill_scale = 0.85000000000000009
 show_labels = false
+show_tooltip = false
