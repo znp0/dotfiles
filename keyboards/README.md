@@ -49,12 +49,12 @@ After loading both files, VIA will recognize the keyboard definition and restore
   - Red: 1 min
   - Green: 3 mins
   - Blue: 10 mins
-  - White: 10+ mins
+  - White: 30 mins
 
 - There is also a custom keycode `KbSeSlp` for deep sleeping time, which likewise has 4 levels, though the exact value of each level is unknown.
 
 - Default sleep timings:
-  - Primary sleeping time: 400 s
+  - Primary sleeping time: 180 s
   - Secondary sleeping time (deep sleep): 800 s
 
 > [!TIP]
