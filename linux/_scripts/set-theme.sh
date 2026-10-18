@@ -1,0 +1,113 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+BASE_DIR="$(cd -- "$SCRIPT_DIR/.." && pwd)"
+
+usage() {
+    echo "Usage: $0 <theme_name>"
+    echo "Available themes:"
+    find "$BASE_DIR/_themes" -mindepth 1 -maxdepth 1 -type d -printf '  %f\n' | sort
+}
+
+if [[ $# -ne 1 || -z ${1:-} ]]; then
+    usage >&2
+    exit 1
+fi
+
+THEME=$1
+THEME_DIR="$BASE_DIR/_themes/$THEME"
+
+if [[ $THEME == */* || $THEME == . || $THEME == .. || ! -d $THEME_DIR ]]; then
+    echo "Error: Theme '$THEME' does not exist in _themes/"
+    exit 1
+fi
+
+NOCTALIA_AVAILABLE=false
+NOCTALIA_RUNNING=false
+SETTINGS_BACKUP=""
+
+if [[ -f $THEME_DIR/noctalia.toml ]]; then
+    STATE_ROOT="${NOCTALIA_STATE_HOME:-${XDG_STATE_HOME:-$HOME/.local/state}}"
+    SETTINGS_FILE="$STATE_ROOT/noctalia/settings.toml"
+
+    if command -v noctalia >/dev/null 2>&1; then
+        NOCTALIA_AVAILABLE=true
+        noctalia config validate "$THEME_DIR/noctalia.toml"
+        if STATUS_OUTPUT=$(noctalia msg status 2>&1); then
+            NOCTALIA_RUNNING=true
+        elif [[ $STATUS_OUTPUT != *"noctalia is not running"* ]]; then
+            echo "Error: Could not check Noctalia status: $STATUS_OUTPUT" >&2
+            exit 1
+        fi
+    fi
+
+    # Back up GUI overrides before changing any theme links or clearing settings.
+    if [[ -e $SETTINGS_FILE || -L $SETTINGS_FILE ]]; then
+        BACKUP_DIR="$STATE_ROOT/noctalia/theme-switch-backups"
+        mkdir -p -m 700 -- "$BACKUP_DIR"
+        SETTINGS_BACKUP=$(mktemp "$BACKUP_DIR/settings.$(date -u +%Y%m%dT%H%M%SZ).XXXXXX.toml")
+        if ! cat -- "$SETTINGS_FILE" > "$SETTINGS_BACKUP"; then
+            echo "Error: Could not back up Noctalia overrides; theme unchanged." >&2
+            exit 1
+        fi
+        echo "-> Noctalia overrides backed up to: $SETTINGS_BACKUP"
+    fi
+fi
+
+echo "Applying theme: $THEME"
+
+# niri
+if [[ -f $THEME_DIR/niri.kdl ]]; then
+    echo "-> Updating niri theme..."
+    mkdir -p -- "$BASE_DIR/niri/cfg"
+    ln -sfnT -- "$THEME_DIR/niri.kdl" "$BASE_DIR/niri/cfg/theme.kdl"
+fi
+
+# Install the palette before the config that selects it.
+if [[ -f $THEME_DIR/noctalia.json ]]; then
+    echo "-> Updating noctalia custom palette..."
+    mkdir -p -- "$BASE_DIR/noctalia/palettes"
+    ln -sfnT -- "$THEME_DIR/noctalia.json" "$BASE_DIR/noctalia/palettes/custom.json"
+fi
+
+# Noctalia's settings.toml is the final overlay on the selected config.
+if [[ -f $THEME_DIR/noctalia.toml ]]; then
+    echo "-> Updating noctalia config and clearing GUI overrides..."
+    mkdir -p -- "$BASE_DIR/noctalia"
+    ln -sfnT -- "$THEME_DIR/noctalia.toml" "$BASE_DIR/noctalia/config.toml"
+    rm -f -- "$SETTINGS_FILE"
+fi
+
+# kitty
+if [[ -f $THEME_DIR/kitty.conf ]]; then
+    echo "-> Updating kitty theme..."
+    mkdir -p -- "$BASE_DIR/kitty"
+    ln -sfnT -- "$THEME_DIR/kitty.conf" "$BASE_DIR/kitty/current-theme.conf"
+fi
+
+# btop
+if [[ -f $THEME_DIR/btop.theme ]]; then
+    echo "-> Updating btop theme..."
+    mkdir -p -- "$BASE_DIR/btop/themes"
+    ln -sfnT -- "$THEME_DIR/btop.theme" "$BASE_DIR/btop/themes/current.theme"
+fi
+
+if [[ -f $THEME_DIR/noctalia.toml ]]; then
+    if [[ $NOCTALIA_RUNNING == true ]]; then
+        echo "-> Reloading noctalia config..."
+        if ! noctalia msg config-reload; then
+            echo "Error: Theme files were updated, but Noctalia could not reload them." >&2
+            exit 1
+        fi
+    else
+        if [[ $NOCTALIA_AVAILABLE == false ]]; then
+            echo "Noctalia is unavailable; config validation and live reload were skipped."
+        fi
+        echo "Theme '$THEME' prepared. Noctalia will load it on its next launch."
+        exit 0
+    fi
+fi
+
+echo "Theme '$THEME' applied successfully!"

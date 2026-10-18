@@ -67,12 +67,33 @@ It does not guarantee physical power-off; see the
 
 ## Set theme
 
-Run `set-theme.sh` to recreate the symbolic links for theme configs.
+Run `linux/_scripts/set-theme.sh <theme_name>` to recreate the symbolic links for
+theme configs. The script works from any directory; use its absolute path when
+outside this repository.
 
 ```bash
-chmod +x linux/set-theme.sh
-linux/set-theme.sh boreal
+linux/_scripts/set-theme.sh boreal
 ```
+
+When a theme includes a Noctalia config, switching (or reapplying) it backs up and
+clears **all GUI overrides**, so settings from the previous theme do not carry
+over. Noctalia reloads immediately when running; otherwise, the config is prepared
+for its next launch. Later GUI changes can create new overrides.
+
+Backups are timestamped files in `noctalia/theme-switch-backups/` under
+`${NOCTALIA_STATE_HOME:-${XDG_STATE_HOME:-$HOME/.local/state}}`. The script prints
+the backup path. Other Noctalia state is preserved.
+
+To restore a backup, replace the example path below with the printed backup path:
+
+```bash
+state_root="${NOCTALIA_STATE_HOME:-${XDG_STATE_HOME:-$HOME/.local/state}}"
+cp -- /path/to/settings.TIMESTAMP.UNIQUE.toml "$state_root/noctalia/settings.toml"
+noctalia msg config-reload # Only needed if Noctalia is running.
+```
+
+Restoring brings back GUI overrides; the next theme switch backs them up and
+clears them again.
 
 ## Font and Cursor
 
