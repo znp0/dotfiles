@@ -1,7 +1,7 @@
 #!/usr/bin/bash
 set -u
 
-# Settings come from linux/systemd/laptop-power.service.
+# systemd loads the selected host profile from /etc/laptop-power/config.env.
 online="/sys/class/power_supply/$AC_ADAPTER/online"
 gpu="/sys/bus/pci/devices/$GPU"
 
@@ -14,6 +14,8 @@ apply_settings() {
     local ac=$1 socket
     if [[ "$ac" == 1 ]]; then
         [[ -d "$gpu" ]] || printf '1\n' > /sys/bus/pci/rescan || return
+        # A GPU removed on battery cannot be checked by the installer until now.
+        [[ -r "$gpu/class" && $(< "$gpu/class") == 0x03* && -e "$gpu/remove" ]] || return
         printf 'auto\n' > "$gpu/power/control" || return
     fi
 
@@ -28,6 +30,7 @@ apply_settings() {
 
     # Lower the refresh rate first; leave the GPU attached if niri fails.
     if [[ "$ac" == 0 && "$(< "$online")" == 0 && -e "$gpu/remove" ]]; then
+        [[ -r "$gpu/class" && $(< "$gpu/class") == 0x03* ]] || return
         printf '1\n' > "$gpu/remove" || return
     fi
     return 0
