@@ -144,8 +144,11 @@ The command resolves its installed symlink to locate the theme bundles.
 
 When a theme includes a Noctalia config, switching (or reapplying) it backs up and
 clears **all GUI overrides**, so settings from the previous theme do not carry
-over. Noctalia reloads immediately when running; otherwise, the config is prepared
-for its next launch. Later GUI changes can create new overrides.
+over. It replaces `settings.toml` with an empty file so Noctalia's file watcher
+also clears cached overrides; deleting the file alone leaves those cached values
+active. Noctalia reloads when running; otherwise, the config is prepared for its
+next launch. Later GUI changes can create new overrides. Empty override files
+are not backed up again.
 
 Backups are timestamped files in `noctalia/theme-switch-backups/` under
 `${NOCTALIA_STATE_HOME:-${XDG_STATE_HOME:-$HOME/.local/state}}`. The script prints

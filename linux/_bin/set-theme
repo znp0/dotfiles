@@ -45,7 +45,7 @@ if [[ -f $THEME_DIR/noctalia.toml ]]; then
     fi
 
     # Back up GUI overrides before changing any theme links or clearing settings.
-    if [[ -e $SETTINGS_FILE || -L $SETTINGS_FILE ]]; then
+    if [[ -s $SETTINGS_FILE || -L $SETTINGS_FILE ]]; then
         BACKUP_DIR="$STATE_ROOT/noctalia/theme-switch-backups"
         mkdir -p -m 700 -- "$BACKUP_DIR"
         SETTINGS_BACKUP=$(mktemp "$BACKUP_DIR/settings.$(date -u +%Y%m%dT%H%M%SZ).XXXXXX.toml")
@@ -78,7 +78,12 @@ if [[ -f $THEME_DIR/noctalia.toml ]]; then
     echo "-> Updating noctalia config and clearing GUI overrides..."
     mkdir -p -- "$BASE_DIR/noctalia"
     ln -sfnT -- "$THEME_DIR/noctalia.toml" "$BASE_DIR/noctalia/config.toml"
-    rm -f -- "$SETTINGS_FILE"
+    # Noctalia caches overrides and does not watch IN_DELETE. An atomic rename
+    # of an empty TOML file triggers IN_MOVED_TO, making it clear that cache too.
+    # Replace symlinks themselves so their targets are preserved.
+    mkdir -p -- "$(dirname -- "$SETTINGS_FILE")"
+    EMPTY_SETTINGS=$(mktemp "$(dirname -- "$SETTINGS_FILE")/.settings.XXXXXX")
+    mv -fT -- "$EMPTY_SETTINGS" "$SETTINGS_FILE"
 fi
 
 # kitty
