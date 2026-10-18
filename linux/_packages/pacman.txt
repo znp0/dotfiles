@@ -4,7 +4,12 @@
 #   - Tools: Gamescope, GOverlay, MangoHud
 #   - Launchers:  Steam, Heroic Games Launcher, Lutris, Faugus Launcher
 cachyos-gaming-meta
-cachyos-gaming-applications
+# cachyos-gaming-applications
+# Only install necessary tools and launchers
+gamescope
+mangohud
+steam
+lutris
 
 # Compositor and Shell
 niri
