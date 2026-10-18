@@ -11,7 +11,15 @@ conf() {
 }
 
 proj() {
-  zed "$HOME/Projects/$1"
+  local dir="$HOME/Projects/$1"
+
+  if [[ ! -d "$dir" ]]; then
+    read -k 1 "answer?Create $dir? [Y/n] "
+    [[ -z "$answer" || "$answer" == [yY] || "$answer" == $'\n' || "$answer" == $'\r' ]] || return 1
+    mkdir -p "$dir" || return 1
+  fi
+
+  zed "$dir"
 }
 
 compdef _conf conf
