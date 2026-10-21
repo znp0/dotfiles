@@ -10,6 +10,8 @@ linux/niri||
 linux/noctalia-greeter|/var/lib/noctalia-greeter|copy
 linux/noctalia||
 linux/plymouth-themes|/usr/share/plymouth/themes|merge
+linux/sushi/plugins-1/onlyoffice.js|~/.local/share/sushi/plugins-1/onlyoffice.js|
+linux/sushi/plugins-1/onlyoffice-convert.mjs|~/.local/share/sushi/plugins-1/onlyoffice-convert.mjs|
 linux/zsh/etc|/etc/zsh|copy
 linux/zsh/home|~/.config/zsh|
 shared/nvim||
