@@ -17,7 +17,6 @@ compdef eza=ls
 alias cat='bat'
 
 # Core utilities
-alias grep='rg --color=auto'
 alias rg='rg --color=auto'
 alias diff='diff --color=auto'
 alias df='df -h'
@@ -44,10 +43,7 @@ alias vi='nvim'
 # Misc
 alias load-fonts='fc-cache -fv'
 alias usage='codexbar usage'
-
-alias evnup='sudo ipsec restart && sleep 1 && sudo ipsec up evnfc-dc && sudo resolvconf -u'
-alias evndn='sudo ipsec down evnfc-dc'
-
+alias disk-usage='ncdu'
 
 alias plytest='sudo plymouthd --debug --debug-file=/tmp/plymouth-debug.log --tty=/dev/tty2; sudo plymouth --show-splash; sleep 3; sudo plymouth --quit'
 alias plylog="sudo grep \"Text '\" /tmp/plymouth-debug.log | tail -20"
